@@ -1,8 +1,3 @@
-import socket, subprocess, json, time, os
-
-host = "192.168.1.8"
-port = 4444
-
 ####################
 
 #   00  On
@@ -13,6 +8,11 @@ port = 4444
 #   06  Config AP on/off
 
 ####################
+
+import socket, subprocess, json, time, os
+
+host = "192.168.1.8"
+port = 4444
 
 def get_status():
     result = subprocess.run("termux-battery-status", shell=True, capture_output=True, text=True)
