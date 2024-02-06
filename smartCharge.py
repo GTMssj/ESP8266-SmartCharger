@@ -56,12 +56,12 @@ def clamp_charge():
                 send_udp_data(b'\x00', host, port)
         time.sleep(5)
 
-#get_battery()
+get_battery()
 send_udp_data(b'\x00', host, port)
 threading.Thread(target=clamp_charge).start()
 
 while True:
-    #get_battery()
+    get_battery()
     os.system('clear')
     draw()
     inp = input(' >')
