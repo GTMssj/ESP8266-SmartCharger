@@ -27,9 +27,9 @@ def get_battery():
 def draw():
     print("=== === === === === === === ===")
     print(
-        f"Battery: {str(status["percentage"])+'%'} Mode: {statList[statInd]}\n"
-        f"Health: {status["health"]}\n"
-        f"Plug: {status["plugged"]}\n"
+        f"Battery: {str(status['percentage'])+'%'} Mode: {statList[statInd]}\n"
+        f"Health: {status['health']}\n"
+        f"Plug: {status['plugged']}\n"
         f"Charging: {charge_on}"
     )
     print("=== === === === === === === ===")
@@ -52,12 +52,12 @@ def clamp_charge():
                 send_udp_data(b'\x00', host, port)
         time.sleep(5)
 
-get_battery()
+#get_battery()
 send_udp_data(b'\x00', host, port)
 threading.Thread(target=clamp_charge).start()
 
 while True:
-    get_battery()
+    #get_battery()
     os.system('clear')
     draw()
     inp = input(' >')
