@@ -23,6 +23,8 @@ char* apPASSWD = "12345679";
 int packetSize;
 char InInfo[32]
 
+int MODE = 0;
+
 void setup() {
   //	Init
   pinMode(0, OUTPUT);
@@ -31,27 +33,18 @@ void setup() {
   Serial.begin(115200);
   Serial.println();
 
+  //	Read Mode from EEPROM
+  
+
   //	WiFi Init
-  WiFi.mode(WIFI_AP_STA);
-  WiFi.softAPConfig(apip, apgateway, apmsk);
-  WiFi.softAP(apSSID, apPASSWD, 1);
-  WiFi.config(staip, stagateway, stamsk);
-  WiFi.begin(SSID, PASSWD);
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print('.');
-    delay(500);
+  switch(MODE){
+  	case 0:
+		WiFiInit_AP();
+		break;
+  	case 1:
+		WiFiInit_AP_STA();
+		break;
   }
-  Serial.println();
-  Serial.println("Connected!");
-  Serial.print("IP address: ");
-  Serial.print(WiFi.localIP());
-  Serial.print(" on port ");
-  Serial.println(localPort);
-  Serial.print("AP address: ");
-  Serial.print(WiFi.softAPIP());
-  Serial.print(" on port ");
-  Serial.println(remotePort);
-  Udp.begin(localPort);
 
   //	EEPROM Init
 
@@ -77,4 +70,40 @@ void loop() {
         break;
     }
   }
+}
+
+void WiFiInit_AP_STA(){
+  WiFi.mode(WIFI_AP_STA);
+  WiFi.softAPConfig(apip, apgateway, apmsk);
+  WiFi.softAP(apSSID, apPASSWD, 1);
+  WiFi.config(staip, stagateway, stamsk);
+  WiFi.begin(SSID, PASSWD);
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print('.');
+    delay(500);
+  }
+  Serial.println();
+  Serial.println("Connected!");
+  Serial.print("IP address: ");
+  Serial.print(WiFi.localIP());
+  Serial.print(" on port ");
+  Serial.println(localPort);
+  Serial.print("AP address: ");
+  Serial.print(WiFi.softAPIP());
+  Serial.print(" on port ");
+  Serial.println(remotePort);
+  Udp.begin(localPort);
+}
+
+void WiFiInit_AP(){
+  WiFi.mode(WIFI_AP);
+  WiFi.softAPConfig(apip, apgateway, apmsk);
+  WiFi.softAP(apSSID, apPASSWD, 1);
+  Serial.println();
+  Serial.println("Connected!");
+  Serial.print("AP address: ");
+  Serial.print(WiFi.softAPIP());
+  Serial.print(" on port ");
+  Serial.println(remotePort);
+  Udp.begin(localPort);
 }
