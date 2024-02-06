@@ -4,7 +4,7 @@
 * Termux:API for handling phone battery percentage.
 * Python and WiFi-UDP connection to tell the relay when to charge.
 
-===  
+---  
 
 requirments:
 * Termux installtion
