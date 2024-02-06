@@ -84,7 +84,7 @@ while True:
             Max_bat = 80
             Min_bat = 20
             statInd = 1     # To Auto
-        case 'auto':
+        case 'keep':
             Max_bat = 90
             Min_bat = 85
             statInd = 2     # To Keep
