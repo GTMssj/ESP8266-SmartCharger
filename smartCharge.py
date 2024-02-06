@@ -13,7 +13,11 @@ port = 4444
 
 statList = ["Manual", "Auto", "Keep"]
 statInd = 0
-status = {}
+status = {
+    "percentage": -1,
+    "health": "N/A",
+    "plugged": "N/A"
+}
 charge_on = False
 
 Max_bat = 80
