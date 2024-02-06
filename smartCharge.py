@@ -3,45 +3,88 @@
 #   00  On
 #   01  Off
 
-#   04  Config SSID
-#   05  Config Passwd
-
 ####################
 
-import socket, subprocess, json, time, os
+from operator import truediv
+import socket, subprocess, json, time, os, threading
 
 host = "192.168.1.8"
 port = 4444
 
-def get_status():
+statList = ["Manual", "Auto", "Keep"]
+statInd = 0
+status = {}
+charge_on = False
+
+Max_bat = 80
+Min_bat = 20
+
+def get_battery():
+    global status
     result = subprocess.run("termux-battery-status", shell=True, capture_output=True, text=True)
     status = json.loads(result.stdout)
-    print("=== === === ===")
-    print('Health: '+status["health"])
-    print('Battery:'+str(status["percentage"])+'%')
-    print('Plug: '+status["plugged"])
-#    print('Temprature: '+status["temperature"])
-#    print('Current: '+status["current"])
-    print("=== === === ===")
+
+def draw():
+    print("=== === === === === === === ===")
+    print(
+        f"Battery: {str(status["percentage"])+'%'} Mode: {statList[statInd]}\n"
+        f"Health: {status["health"]}\n"
+        f"Plug: {status["plugged"]}\n"
+        f"Charging: {charge_on}"
+    )
+    print("=== === === === === === === ===")
+    
 
 def send_udp_data(data, host, port):
     udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     udp_socket.sendto(data, (host, port))
     udp_socket.close()
 
+def clamp_charge():
+    while True:
+        if charge_on:
+            if status["percentage"] >= Max_bat:
+                charge_on = False
+                send_udp_data(b'\x01', host, port)
+        else:
+            if status["percentage"] <= Min_bat:
+                charge_on = True
+                send_udp_data(b'\x00', host, port)
+        time.sleep(5)
+
+get_battery()
+send_udp_data(b'\x00', host, port)
+threading.Thread(target=clamp_charge).start()
+
 while True:
+    get_battery()
     os.system('clear')
-    get_status()
-    match input(' >'):
+    draw()
+    inp = input(' >')
+    match inp:
         case 'on':
+            Max_bat = 80
+            Min_bat = 20
             send_udp_data(b'\x00', host, port)
-            #t_on()
+            statInd = 0     # To Manual
+            charge_on = True
             #   0x00    TurnOn
         case 'off':
+            Max_bat = 80
+            Min_bat = 20
             send_udp_data(b'\x01', host, port)
-            #t_off()
+            statInd = 0     # To Manual
+            charge_on = False
             #   0x01    TurnOff
-        case 'q':
+        case 'auto':
+            Max_bat = 80
+            Min_bat = 20
+            statInd = 1     # To Auto
+        case 'auto':
+            Max_bat = 90
+            Min_bat = 85
+            statInd = 2     # To Keep
+        case 'q' | 'exit':
             exit()
 
         case _:
