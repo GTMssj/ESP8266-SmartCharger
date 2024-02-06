@@ -53,8 +53,8 @@ void loop() {
         Serial.println("ON");
         break;
       case 0b00000001:
-        digitalWrite(0, HIGH);
-        digitalWrite(2, LOW);
+        digitalWrite(2, HIGH);
+        digitalWrite(0, LOW);
         Serial.println("OFF");
         break;
     }
