@@ -5,7 +5,6 @@
 
 #   04  Config SSID
 #   05  Config Passwd
-#   06  Config AP on/off
 
 ####################
 
