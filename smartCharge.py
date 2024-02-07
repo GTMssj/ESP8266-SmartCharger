@@ -31,10 +31,12 @@ def get_battery():
 def draw():
     print("=== === === === === === === ===")
     print(
+        f"\n"
         f"Battery: {str(status['percentage'])+'%'} Mode: {statList[statInd]}\n"
         f"Health: {status['health']}\n"
         f"Plug: {status['plugged']}\n"
-        f"Charging: {charge_on}"
+        f"Charging: {charge_on}\n"
+        f"Range: {Min_bat}% - {Max_bat}%\n"
     )
     print("=== === === === === === === ===")
     
