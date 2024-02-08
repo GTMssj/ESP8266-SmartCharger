@@ -28,26 +28,10 @@ def get_battery():
     result = subprocess.run("termux-battery-status", shell=True, capture_output=True, text=True)
     status = json.loads(result.stdout)
 
-def fake_percentage():
-    global status
-    down = false
-    while True:
-        if status['percentage'] >= 90:
-            down = true
-        if status['percentage'] <= 10:
-            down = false
-
-        if down:
-            status['percentage'] = status['percentage'] - 1
-        else:
-            status['percentage'] = status['percentage'] + 1
-        time.sleep(0.5)
-
 def draw():
     print("=== === === === === === === ===")
     print(
         f"\n"
-        f"IP: {host}\n"
         f"Battery: {str(status['percentage'])+'%'} Mode: {statList[statInd]}\n"
         f"Health: {status['health']}\n"
         f"Plug: {status['plugged']}\n"
@@ -74,13 +58,12 @@ def clamp_charge():
                 send_udp_data(b'\x00', host, port)
         time.sleep(5)
 
-#get_battery()
+get_battery()
 send_udp_data(b'\x00', host, port)
 threading.Thread(target=clamp_charge).start()
-threading.Thread(target=fake_percentage).start()
 
 while True:
-    #get_battery()
+    get_battery()
     os.system('clear')
     draw()
     inp = input(' >')
