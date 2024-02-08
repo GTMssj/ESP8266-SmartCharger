@@ -29,7 +29,8 @@ def get_battery():
     status = json.loads(result.stdout)
 
 def fake_percentage():
-    bool down = false
+    global status
+    down = false
     while True:
         if status['percentage'] >= 90:
             down = true
@@ -37,9 +38,9 @@ def fake_percentage():
             down = false
 
         if down:
-            status['percentage'] -= 10
+            status['percentage'] = status['percentage'] - 1
         else:
-            status['percentage'] += 10
+            status['percentage'] = status['percentage'] + 1
         time.sleep(0.5)
 
 def draw():
