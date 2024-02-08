@@ -32,6 +32,7 @@ def draw():
     print("=== === === === === === === ===")
     print(
         f"\n"
+        f"IP: {host}, on Port: {port}\n"
         f"Battery: {str(status['percentage'])+'%'} Mode: {statList[statInd]}\n"
         f"Health: {status['health']}\n"
         f"Plug: {status['plugged']}\n"
@@ -59,6 +60,7 @@ def clamp_charge():
         time.sleep(5)
 
 get_battery()
+charge_on = True
 send_udp_data(b'\x00', host, port)
 threading.Thread(target=clamp_charge).start()
 
