@@ -61,7 +61,7 @@ def clamp_charge(charge_on):
 get_battery()
 charge_on = True
 send_udp_data(b'\x00', host, port)
-threading.Thread(target=clamp_charge, charge_on).start()
+threading.Thread(target=clamp_charge, args=(charge_on, )).start()
 
 while True:
     get_battery()
