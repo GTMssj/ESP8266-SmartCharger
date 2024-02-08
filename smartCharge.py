@@ -5,7 +5,6 @@
 
 ####################
 
-from operator import truediv
 import socket, subprocess, json, time, os, threading
 
 host = "192.168.1.8"
@@ -47,7 +46,7 @@ def send_udp_data(data, host, port):
     udp_socket.sendto(data, (host, port))
     udp_socket.close()
 
-def clamp_charge():
+def clamp_charge(charge_on):
     while True:
         if charge_on:
             if status["percentage"] >= Max_bat:
@@ -62,11 +61,11 @@ def clamp_charge():
 get_battery()
 charge_on = True
 send_udp_data(b'\x00', host, port)
-threading.Thread(target=clamp_charge).start()
+threading.Thread(target=clamp_charge, charge_on).start()
 
 while True:
     get_battery()
-    os.system('clear')
+    #os.system('clear')
     draw()
     inp = input(' >')
     match inp:
