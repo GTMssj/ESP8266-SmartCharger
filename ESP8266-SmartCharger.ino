@@ -48,13 +48,13 @@ void loop() {
     Udp.read(InPacket, packetSize);
     switch(InPacket[0]){
       case 0b00000000:
-        digitalWrite(2, LOW);
-        digitalWrite(0, HIGH);
+        digitalWrite(2, HIGH);
+        digitalWrite(0, LOW);
         Serial.println("ON");
         break;
       case 0b00000001:
-        digitalWrite(2, HIGH);
-        digitalWrite(0, LOW);
+        digitalWrite(2, LOW);
+        digitalWrite(0, HIGH);
         Serial.println("OFF");
         break;
     }

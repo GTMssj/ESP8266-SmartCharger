@@ -51,14 +51,23 @@ class ChargStatus:
 #   =================== #
 
 charge = ChargStatus()
+Charging = True
 def loop():
     while True:
         if charge.status['percentage'] < charge.Min_bat and charge.status['status'] == 'DISCHARGING':
-            charge.send_cmd(b"\x01")
-        if charge.status['percentage'] > charge.Max_bat and charge.status['status'] == 'CHARGING':
             charge.send_cmd(b"\x00")
+            Charging = True
+        if charge.status['percentage'] > charge.Max_bat and charge.status['status'] == 'CHARGING':
+            charge.send_cmd(b"\x01")
+            Charging = False
+        
+        if Charging:
+            charge.send_cmd(b"\x00")
+        else:
+            charge.send_cmd(b"\x01")
+        time.sleep(2)
         charge.draw()
-        time.sleep(10)
+        time.sleep(8)
 
 args = sys.argv[1:]
 i = 0
