@@ -23,6 +23,7 @@ class ChargStatus:
         udp_socket.close()
         
     def draw(self):
+        self.getStat()
         os.system("clear")
         print("=== === === === === === === ===")
         print(
@@ -37,7 +38,9 @@ class ChargStatus:
         print("=== === === === === === === ===")
     
     def set_limit(self, range):
-        self.Min_bat, self.Max_bat = range.split("-")
+        a, b = range.split("-")
+        self.Min_bat = int(a)
+        self.Max_bat = int(b)
         if self.Max_bat <= self.Min_bat:
             tmp = self.Max_bat
             self.Max_bat = self.Min_bat
@@ -53,11 +56,12 @@ class ChargStatus:
 charge = ChargStatus()
 Charging = True
 def loop():
+    global Charging
     while True:
-        if charge.status['percentage'] < charge.Min_bat and charge.status['status'] == 'DISCHARGING':
+        if charge.status['percentage'] < charge.Min_bat and not Charging:
             charge.send_cmd(b"\x00")
             Charging = True
-        if charge.status['percentage'] > charge.Max_bat and charge.status['status'] == 'CHARGING':
+        if charge.status['percentage'] > charge.Max_bat and Charging:
             charge.send_cmd(b"\x01")
             Charging = False
         
@@ -65,9 +69,8 @@ def loop():
             charge.send_cmd(b"\x00")
         else:
             charge.send_cmd(b"\x01")
-        time.sleep(2)
+        time.sleep(1)
         charge.draw()
-        time.sleep(8)
 
 args = sys.argv[1:]
 i = 0
