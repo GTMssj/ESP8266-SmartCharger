@@ -100,6 +100,9 @@ while i < len(args):
             case '-mute':
                 charge.mute = True
     i += 1
+
+if charge.mute:
+    print(f"Charger started, program PID: {os.getpid()}\n")
     
 loopThread = threading.Thread(target=loop)
 loopThread.setDaemon
