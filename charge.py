@@ -9,6 +9,8 @@ class ChargStatus:
 
     host = "192.168.1.8"
     port = 4444
+    
+    mute = False
 
     def __init__(self):
         self.getStat()
@@ -24,18 +26,19 @@ class ChargStatus:
         
     def draw(self):
         self.getStat()
-        os.system("clear")
-        print("=== === === === === === === ===")
-        print(
-            f"\n"
-            f"IP: {self.host} on Port: {self.port}\n"
-            f"Battery: {self.status['percentage']}%\n"
-            f"Status: {self.status['status']}\n"
-            f"Range: {self.Min_bat}% - {self.Max_bat}%\n"
-            f"\n"
-            f"  (Ctrl-C to close)\n"
-        )
-        print("=== === === === === === === ===")
+        if not self.mute:
+            os.system("clear")
+            print("=== === === === === === === ===")
+            print(
+                f"\n"
+                f"IP: {self.host} on Port: {self.port}\n"
+                f"Battery: {self.status['percentage']}%\n"
+                f"Status: {self.status['status']}\n"
+                f"Range: {self.Min_bat}% - {self.Max_bat}%\n"
+                f"\n"
+                f"  (Ctrl-C to close)\n"
+            )
+            print("=== === === === === === === ===")
     
     def set_limit(self, range):
         a, b = range.split("-")
@@ -74,6 +77,9 @@ def loop():
 
 args = sys.argv[1:]
 i = 0
+if len(args) == 0:
+    print(f"\nUsage: {sys.argv[0]} [-h] [-mode auto|hold] [-host IP:Port]\n [-manual low-high]")
+    exit()
 while i < len(args):
     cmd = args[i]
     if cmd[0] == '-':
@@ -91,6 +97,8 @@ while i < len(args):
                 charge.set_host(args[i+1])
             case '-manual':
                 charge.set_limit(args[i+1])
+            case '-mute':
+                charge.mute = True
     i += 1
     
 loopThread = threading.Thread(target=loop)
